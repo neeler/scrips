@@ -1,6 +1,6 @@
 {
   "name": "scrips",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Tiny utility to manage subscriptions",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
