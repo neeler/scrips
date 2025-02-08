@@ -21,11 +21,17 @@ test('subscribes and unsubscribes a callback', () => {
 test('publishes events to all subscribers', () => {
     const manager = new SubscriptionManager<number>();
 
+    expect(manager.hasSubscriptions).toBe(false);
+
     const callback1 = vi.fn();
     manager.subscribe(callback1);
 
+    expect(manager.hasSubscriptions).toBe(true);
+
     const callback2 = vi.fn();
     manager.subscribe(callback2);
+
+    expect(manager.hasSubscriptions).toBe(true);
 
     const firstValue = 6;
 
@@ -39,6 +45,8 @@ test('publishes events to all subscribers', () => {
 
     manager.unsubscribe(callback1);
 
+    expect(manager.hasSubscriptions).toBe(true);
+
     const secondValue = 7;
 
     manager.publish(secondValue);
@@ -50,6 +58,8 @@ test('publishes events to all subscribers', () => {
     expect(callback2).toHaveBeenLastCalledWith(secondValue);
 
     manager.unsubscribe(callback2);
+
+    expect(manager.hasSubscriptions).toBe(false);
 
     const thirdValue = 8;
 
