@@ -4,6 +4,8 @@
 
 Compatible with Node.js and browser environments.
 
+![example workflow](https://github.com/neeler/scrips/actions/workflows/tests.yml/badge.svg)
+
 ## Installation
 
 Install the `scrips` npm module using your favorite package manager:
