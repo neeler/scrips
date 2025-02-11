@@ -20,3 +20,4 @@ src/*
 tsup.config.ts
 tsconfig.json
 .prettierrc.js
+release.config.js
