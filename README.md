@@ -7,7 +7,7 @@ Compatible with Node.js and browser environments.
 ![tests workflow](https://github.com/neeler/scrips/actions/workflows/tests.yml/badge.svg)
 ![npm package minimized gzipped size](https://img.shields.io/bundlejs/size/scrips)
 
-[![npm stats](https://nodei.co/npm/scrips.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/scrips/)
+[![npm stats](https://nodei.co/npm/scrips.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/scrips)
 
 ## Installation
 
