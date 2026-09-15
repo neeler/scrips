@@ -23,9 +23,36 @@ export class SubscriptionManager<P = unknown> {
         this.subscriptions.clear();
     }
 
+    /**
+     * Synchronously delivers `props` to every subscriber, in subscription order.
+     *
+     * The subscriber list is snapshotted before delivery, so subscribing or
+     * unsubscribing from within a callback takes effect on the next publish.
+     *
+     * If a callback throws, the remaining callbacks still receive the event.
+     * Once delivery is complete the error is rethrown; if more than one
+     * callback threw, they are rethrown together as an `AggregateError`.
+     */
     publish(props: P): void {
-        this.subscriptions.forEach((callback: Callback<P>) => {
-            callback(props);
-        });
+        const errors: unknown[] = [];
+
+        for (const callback of Array.from(this.subscriptions)) {
+            try {
+                callback(props);
+            } catch (error) {
+                errors.push(error);
+            }
+        }
+
+        if (errors.length === 1) {
+            throw errors[0];
+        }
+
+        if (errors.length > 1) {
+            throw new AggregateError(
+                errors,
+                `${errors.length} subscribers threw during publish`,
+            );
+        }
     }
 }
