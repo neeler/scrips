@@ -1,5 +1,5 @@
 import { expect, test, vi } from 'vitest';
-import { SubscriptionManager } from '../src';
+import { SubscriptionCallback, SubscriptionManager } from '../src';
 
 test('constructs a SubscriptionManager', () => {
     const manager = new SubscriptionManager();
@@ -164,4 +164,37 @@ test('a subscriber removed during publish still receives the current event', () 
 
     manager.publish(2);
     expect(removed).toHaveBeenCalledTimes(1);
+});
+
+test('subscribe returns an unsubscribe function', () => {
+    const manager = new SubscriptionManager<number>();
+
+    const callback: SubscriptionCallback<number> = vi.fn();
+    const unsubscribe = manager.subscribe(callback);
+
+    manager.publish(1);
+    expect(callback).toHaveBeenCalledTimes(1);
+
+    unsubscribe();
+    expect(manager.hasSubscriptions).toBe(false);
+
+    manager.publish(2);
+    expect(callback).toHaveBeenCalledTimes(1);
+
+    expect(() => unsubscribe()).not.toThrow();
+});
+
+test('the returned unsubscribe only removes its own callback', () => {
+    const manager = new SubscriptionManager<number>();
+
+    const first = vi.fn();
+    const second = vi.fn();
+    const unsubscribeFirst = manager.subscribe(first);
+    manager.subscribe(second);
+
+    unsubscribeFirst();
+    manager.publish(1);
+
+    expect(first).not.toHaveBeenCalled();
+    expect(second).toHaveBeenCalledWith(1);
 });
