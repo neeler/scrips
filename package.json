@@ -16,7 +16,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build",
-    "type-check": "npx tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write src tests",
+    "format:check": "prettier --check src tests",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -47,7 +49,7 @@
     "vitest": "^3.2.4"
   },
   "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
+    "node": "26.8.2",
+    "npm": "11.19.1"
   }
 }
