@@ -7,16 +7,27 @@
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
+      "import": {
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      }
     }
   },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build",
-    "type-check": "npx tsc --noEmit",
+    "type-check": "tsc --noEmit",
+    "format": "prettier --write src tests",
+    "format:check": "prettier --check src tests",
     "test": "vitest",
     "coverage": "vitest run --coverage"
   },
@@ -47,7 +58,7 @@
     "vitest": "^3.2.4"
   },
   "volta": {
-    "node": "24.13.0",
-    "npm": "11.6.2"
+    "node": "26.8.2",
+    "npm": "11.19.1"
   }
 }
