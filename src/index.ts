@@ -1,1 +1,1 @@
-export * from './SubscriptionManager'
+export * from './SubscriptionManager';
