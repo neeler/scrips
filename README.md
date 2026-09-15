@@ -95,6 +95,13 @@ scrips.publish({ foo: 'Hello', bar: 42 });
 // Callback 3: { foo: 'Hello', bar: 42 }
 ```
 
+## Delivery semantics
+
+- `publish` calls subscribers synchronously, in the order they subscribed.
+- Subscribers are snapshotted before delivery. Subscribing or unsubscribing from inside a callback takes effect on the next `publish`, not the current one.
+- If a callback throws, the remaining callbacks still receive the event. After delivery, the error is rethrown to the caller of `publish`. If more than one callback threw, the errors are rethrown together as an [`AggregateError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError).
+- Subscribing the same function twice registers it once.
+
 ## Usage with React
 
 You can use `scrips` in a React app by making a simple custom hook:
