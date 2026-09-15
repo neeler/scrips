@@ -1,21 +1,32 @@
-type Callback<P = void> = (props: P) => void;
+export type SubscriptionCallback<P = void> = (props: P) => void;
 
 export class SubscriptionManager<P = unknown> {
-    private readonly subscriptions: Set<Callback<P>>;
+    private readonly subscriptions: Set<SubscriptionCallback<P>>;
 
     constructor() {
-        this.subscriptions = new Set<Callback<P>>();
+        this.subscriptions = new Set<SubscriptionCallback<P>>();
     }
 
     get hasSubscriptions(): boolean {
         return this.subscriptions.size > 0;
     }
 
-    subscribe(callback: Callback<P>): void {
+    /**
+     * Registers `callback` to receive published events.
+     *
+     * Subscribing the same function more than once registers it once.
+     *
+     * @returns A function that unsubscribes `callback`. Calling it more than
+     * once is harmless.
+     */
+    subscribe(callback: SubscriptionCallback<P>): () => void {
         this.subscriptions.add(callback);
+        return () => {
+            this.unsubscribe(callback);
+        };
     }
 
-    unsubscribe(callback: Callback<P>): void {
+    unsubscribe(callback: SubscriptionCallback<P>): void {
         this.subscriptions.delete(callback);
     }
 

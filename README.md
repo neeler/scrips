@@ -63,9 +63,19 @@ const someObject = {
     },
 };
 
-scrips.subscribe(callback1);
+const unsubscribe1 = scrips.subscribe(callback1);
 scrips.subscribe(callback2);
 scrips.subscribe(someObject.callback3);
+```
+
+Callbacks can be typed with the exported `SubscriptionCallback` type:
+
+```typescript
+import { SubscriptionCallback } from 'scrips';
+
+const callback4: SubscriptionCallback<{ foo: string; bar: number }> = (payload) => {
+    console.log('Callback 4:', payload);
+};
 ```
 
 Receive the event payload when the event is emitted:
@@ -79,9 +89,11 @@ scrips.publish({ foo: 'Hello', bar: 42 });
 // Callback 3: { foo: 'Hello', bar: 42 }
 ```
 
-Unsubscribe from an event:
+Unsubscribe from an event by calling the function returned by `subscribe`, or by passing the same callback to `unsubscribe`:
 
 ```typescript
+unsubscribe1();
+// or, equivalently:
 scrips.unsubscribe(callback1);
 ```
 
@@ -115,15 +127,11 @@ export function useSubscriptionStatus<P>(
     defaultValue: P,
 ) {
     const [status, setStatus] = useState<P>(defaultValue);
-    useEffect(() => {
-        const callback = (payload: P) => {
-            setStatus(payload);
-        };
-        subscriptionManager?.subscribe(callback);
-        return () => {
-            subscriptionManager?.unsubscribe(callback);
-        };
-    }, [subscriptionManager]);
+    useEffect(
+        // subscribe returns the unsubscribe function, which doubles as the effect cleanup
+        () => subscriptionManager.subscribe(setStatus),
+        [subscriptionManager],
+    );
     return status;
 }
 ```
